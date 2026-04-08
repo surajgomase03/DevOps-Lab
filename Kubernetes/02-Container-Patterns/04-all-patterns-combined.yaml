@@ -1,0 +1,57 @@
+---
+# Pod with ALL 3 Container Types
+apiVersion: v1
+kind: Pod
+metadata:
+  name: app-with-all-sidecars
+  namespace: dev
+  labels:
+    app: production-app
+spec:
+  initContainers:
+  - name: init-setup
+    image: busybox:latest
+    command: ["sh", "-c", "echo '[INIT] Setting up environment'; sleep 2"]
+
+  containers:
+  # Main Application
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+  # SIDECAR: Logger
+  - name: sidecar-logger
+    image: busybox:latest
+    command:
+      - sh
+      - -c
+      - |
+        while true; do
+          echo "[LOGGER] Collecting application logs"
+          sleep 30
+        done
+
+  # SIDECAR: Metrics
+  - name: sidecar-metrics
+    image: busybox:latest
+    command:
+      - sh
+      - -c
+      - |
+        while true; do
+          echo "[METRICS] Gathering performance metrics"
+          sleep 30
+        done
+
+  # AMBASSADOR: External Service Proxy
+  - name: ambassador-proxy
+    image: alpine:latest
+    command:
+      - sh
+      - -c
+      - |
+        while true; do
+          echo "[AMBASSADOR] Routing to external database"
+          sleep 30
+        done

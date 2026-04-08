@@ -1,0 +1,26 @@
+---
+# Pod with Ambassador Container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-ambassador
+  namespace: dev
+  labels:
+    app: app-ambassador
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+  - name: ambassador-proxy
+    image: alpine:latest
+    command:
+      - sh
+      - -c
+      - |
+        while true; do
+          echo "[Ambassador] Proxying to external service..."
+          sleep 30
+        done

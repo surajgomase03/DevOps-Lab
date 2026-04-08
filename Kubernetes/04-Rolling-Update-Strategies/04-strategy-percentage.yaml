@@ -1,0 +1,30 @@
+---
+# Strategy 4: Percentage-Based (Dynamic)
+# maxUnavailable=25% means allow 25% of replicas down (3 * 0.25 = 1 pod)
+# maxSurge=50% means create 50% extra pods (3 * 0.50 = 1-2 extra pods)
+# Scales automatically with replica count
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-percentage
+  namespace: dev
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%          # 50% of replicas as extra
+      maxUnavailable: 25%    # 25% of replicas can be unavailable
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

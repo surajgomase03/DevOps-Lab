@@ -1,0 +1,30 @@
+---
+# Strategy 1: Zero Downtime (Best Practice)
+# maxUnavailable=0 means never reduce pods below replicas count
+# maxSurge=1 means create 1 extra pod during update
+# Result: Always 3 pods available, max 4 pods during update
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-zero-downtime
+  namespace: dev
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1           # Create 1 extra pod (3+1=4 max)
+      maxUnavailable: 0     # Never reduce below 3 available pods
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

@@ -1,0 +1,20 @@
+---
+# Pod with Init Container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-init
+  namespace: dev
+  labels:
+    app: app-init
+spec:
+  initContainers:
+  - name: init-setup
+    image: busybox:latest
+    command: ["sh", "-c", "echo 'Initializing...'; sleep 2; echo 'Init complete'"]
+
+  containers:
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 80

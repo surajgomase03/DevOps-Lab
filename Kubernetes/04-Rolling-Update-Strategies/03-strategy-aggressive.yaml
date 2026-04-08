@@ -1,0 +1,31 @@
+---
+# Strategy 3: Aggressive (Fastest but Resource Heavy)
+# maxUnavailable=2 means allow 2 pods to be down
+# maxSurge=2 means create 2 extra pods
+# Result: Can have min 1 pod, max 5 pods during update
+# Use for: Non-critical services, unlimited resources
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-aggressive
+  namespace: dev
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2           # Create 2 extra pods (3+2=5 max)
+      maxUnavailable: 2     # Allow 2 pods down (3-2=1 min available)
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

@@ -1,0 +1,26 @@
+---
+# Namespace: Dev
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    environment: development
+
+---
+# Namespace: Staging
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: staging
+  labels:
+    environment: staging
+
+---
+# Namespace: Prod
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: prod
+  labels:
+    environment: production

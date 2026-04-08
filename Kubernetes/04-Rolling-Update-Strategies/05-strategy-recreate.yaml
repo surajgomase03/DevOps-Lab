@@ -1,0 +1,27 @@
+---
+# Strategy 5: Recreate (Not Recommended - Downtime)
+# Kills all pods first, then creates new ones
+# Result: Complete downtime during deployment
+# Use for: Only when necessary (very rare)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-recreate
+  namespace: dev
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80

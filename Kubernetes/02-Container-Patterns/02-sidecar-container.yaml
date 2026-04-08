@@ -1,0 +1,26 @@
+---
+# Pod with Sidecar Container
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-with-sidecar
+  namespace: dev
+  labels:
+    app: app-sidecar
+spec:
+  containers:
+  - name: app
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+
+  - name: sidecar-logger
+    image: busybox:latest
+    command:
+      - sh
+      - -c
+      - |
+        while true; do
+          echo "[$(date)] - Logger sidecar is running"
+          sleep 30
+        done

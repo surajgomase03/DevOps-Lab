@@ -1,0 +1,31 @@
+---
+# Strategy 2: Faster Deployment (Some Risk)
+# maxUnavailable=1 means allow 1 pod to be down
+# maxSurge=0 means don't create extra pods
+# Result: Can have only 2 pods available during update (temporary downtime)
+# Use for: Non-critical services, development environments
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-faster
+  namespace: dev
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0           # Don't create extra pods
+      maxUnavailable: 1     # Allow 1 pod to be unavailable (3-1=2 min available)
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
